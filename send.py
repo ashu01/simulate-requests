@@ -1,5 +1,5 @@
 import requests
-
+import json
 message_to_send = {
     "route" : "push",
     "recently_used" : {
@@ -25,6 +25,6 @@ message_to_send = {
     "priority" : ["ios", "android"]   # Priority platforms
 }
 
-resp = requests.post("http://localhost:7000/send", json=message_to_send)
+resp = requests.post("http://localhost:7000/send", data=json.dumps(message_to_send))
 body = resp.text
 print(body)
