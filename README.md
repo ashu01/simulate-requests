@@ -11,3 +11,7 @@ Instructions
 5. On one terminal window, run `go run server.go`
 6. On another terminal window, run `python3 send.py`
 7. The request should be visible on server.go and the corresponding response should be visible on the terminal running the python program
+
+Contributors
+============
+1. Ashutosh Kumar Gupta
