@@ -2,17 +2,20 @@ package main
 
 import (
 	"fmt"
+	// "log"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
 )
 
-func main() {
-	r := gin.Default()
+var db *pgx.ConnPool
+var db_err error
 
+func init() {
 	// connecting database of psql by go
-	db, db_error := pgx.NewConnPool(pgx.ConnPoolConfig{
+	db, db_err = pgx.NewConnPool(pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
 			Host:     "localhost",
 			Database: "pmp",
@@ -23,9 +26,16 @@ func main() {
 	})
 
 	// database can't be conn
-	if db_error != nil {
+	if db_err != nil {
 		fmt.Println("Can't connect to database")
+		// log.Fatalf("Error : %#v", db_err)
+		os.Exit(1)
 	}
+
+}
+
+func main() {
+	r := gin.Default()
 
 	r.POST("/send", func(c *gin.Context) {
 		var request Request
