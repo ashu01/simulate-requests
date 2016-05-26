@@ -1,7 +1,7 @@
 import requests
 import json
 message_to_send = {
-    "route" : "push",
+	"route" : "push",
     "recently_used" : {
         "platform" : "ios",
         "device_id" : "gdjg#5r67fgvehjdg@7781uigd"
