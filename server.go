@@ -12,7 +12,8 @@ func main() {
     r.POST("/send", func(c *gin.Context) {
         var request Request
         c.BindJSON(&request)
-        fmt.Printf("\n\nReceived new Push:\n\n%#v\n\n", request)
+        // commenting the print statement
+        // fmt.Printf("\n\nReceived new Push:\n\n%#v\n\n", request)
         var response Response
         response.NotificationID = int64(100001221082108)
         response.Timestamp = time.Now().Unix()
