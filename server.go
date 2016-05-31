@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx"
+	"github.com/parnurzeal/gorequest"
 )
 
 // Database connectivity variables
@@ -130,7 +133,7 @@ func main() {
 		var userdata UserIDCreate
 		c.BindJSON(&userdata)
 
-		fmt.Println("\n\nRequest Received : \n\n", userdata)
+		fmt.Printf("\n\nRequest Received :#%v \n\n", userdata)
 
 		tx, _ := db.Begin() // tx => transaction , _ => error and execute
 		defer tx.Rollback() // it will be executed after the completion of local function
@@ -156,7 +159,7 @@ func main() {
 	r.POST("/dumpintousersdescription", func(c *gin.Context) {
 		var request DumpUsersdescription
 		c.BindJSON(&request)
-		fmt.Printf("\n\n Received : %#v\n\n", request)
+		fmt.Printf("\n\n Received : #%v\n\n", request)
 
 		tx, _ := db.Begin() // tx => transaction , _ => error and execute
 		defer tx.Rollback() // it will be executed after the completion of local function
@@ -189,7 +192,7 @@ func main() {
 		var request UserIDCreate
 		// Dump the incoming request data into a struct variable
 		c.BindJSON(&request)
-		fmt.Println("\n\n\n Received : %#v\n\n\n", request)
+		fmt.Printf("\n\n\n Received : #%v\n\n\n", request)
 		// database transaction begins
 
 		tx, _ := db.Begin() // tx => transaction , _ => error and execute
@@ -206,6 +209,12 @@ func main() {
                 WHERE usersdescription.userid = users.userid AND username = $1 AND email = $2
         `, request.UserName, request.Email).Scan(&deviceid, &platform)
 
+		if deviceid == "" || platform == "" {
+			fmt.Println("DeviceID or platform is not received")
+			c.JSON(404, "Error Missing deviceid or platform")
+			return
+		}
+
 		fmt.Println("\n\nDeviceid and platform : ", deviceid, platform)
 		fmt.Println(err)
 
@@ -221,8 +230,40 @@ func main() {
 
 		response.DeviceID = deviceid
 		response.Platform = platform
-		fmt.Printf("\n\n\n Response :  %#v\n\n\n", response)
+		//fmt.Printf("\n\n\n Response :  %#v\n\n\n", response)
 
+		//fmt.Printf("Request : %s ************ %s\n\n", request, response)
+
+		go func() {
+			var resp goRoutine
+			resp.Name = request.Name
+			resp.UserName = request.UserName
+			resp.Email = request.Email
+			resp.DeviceID = response.DeviceID
+			resp.Platform = response.Platform
+			//  messageToForward := {
+			// 	 "name" : resp.Name,
+			// 	 "username" : resp.UserName,
+			// 	 "email" : resp.Email,
+			// 	 "deviceid" : resp.DeviceID,
+			// 	 "platform" : resp.PlaTform
+			//  }
+
+			respJSON, _ := json.Marshal(resp)
+			contentReader := bytes.NewReader(respJSON)
+			request := gorequest.New()
+			//URL of server where you have to post request.POST("path:port")
+			//Set(a,b) is used for setting header fields. Example. To set a->`Accept` as b->`application/json`
+			//Send(jsonobject)
+			//End()
+			res, body, errs := request.Post(" URL OF SERVER ").
+				Set("Notes", "gorequst is coming!").
+				Send(contentReader).
+				End()
+			fmt.Println(res, body, errs)
+
+			//fmt.Println(string(b))
+		}()
 		c.JSON(200, response)
 	})
 
@@ -272,4 +313,12 @@ type DumpUsersdescription struct {
 type ToPNS struct {
 	DeviceID string `json:"deviceid,omitempty"`
 	Platform string `json:"platform,omitempty"`
+}
+
+type goRoutine struct {
+	DeviceID string `json:"deviceid,omitempty"`
+	Platform string `json:"platform,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Name     string `json:"name,omitempty"`
+	UserName string `json:"username,omitempty"`
 }
