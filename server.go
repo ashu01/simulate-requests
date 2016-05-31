@@ -133,9 +133,10 @@ func main() {
 		fmt.Println("\n\nRequest Received : \n\n", userdata)
 
 		tx, _ := db.Begin() // tx => transaction , _ => error and execute
+		defer tx.Rollback() // it will be executed after the completion of local function
 
 		// insert into users table
-		db.QueryRow(`
+		tx.Exec(`
         INSERT INTO users (username, name, email) VALUES ($1, $2, $3)
     `, userdata.UserName, userdata.Name, userdata.Email)
 
@@ -146,8 +147,6 @@ func main() {
 			c.JSON(500, "ERR")
 			return
 		}
-
-		defer tx.Rollback() // it will be executed after the completion of local function
 
 		c.JSON(200, "ok") // Successfully inserted into users table
 
@@ -160,9 +159,10 @@ func main() {
 		fmt.Printf("\n\n Received : %#v\n\n", request)
 
 		tx, _ := db.Begin() // tx => transaction , _ => error and execute
+		defer tx.Rollback() // it will be executed after the completion of local function
 
 		//fmt.Println("Before Query")
-		db.QueryRow(`
+		tx.Exec(`
         INSERT INTO usersdescription (userid, deviceid, platform) VALUES ($1, $2, $3)
     `, request.UserID, request.DeviceID, request.Platform)
 
@@ -176,7 +176,6 @@ func main() {
 			c.JSON(500, "ERR")
 			return
 		}
-		defer tx.Rollback() // it will be executed after the completion of local function
 
 		var response Response
 		response.Timestamp = time.Now().Unix()
