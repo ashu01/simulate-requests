@@ -4,7 +4,7 @@ Repo displays a simple HTTP request-response, using JSON objects. It can be used
 
 Instructions
 =============
-1. Install and set up go
+1. Install and set up `go` && `postgres psql` 
 2. Set up Python3.4 and pip3
 3. Install requests module using the following command `sudo pip3 install requests`
 4. Install gin using the following command `go get github.com/gin-gonic/gin`
@@ -24,7 +24,7 @@ Instructions
 Other python Modules used
 =========================
   random, psycopg2, json
-  install python maodules `sudo pip3 install <package>`
+  install python modules `sudo pip3 install <package>`
 
 
 Contributors
