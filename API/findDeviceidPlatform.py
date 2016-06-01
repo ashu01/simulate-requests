@@ -6,7 +6,7 @@ import json
 postgres = psycopg2.connect(database = 'pmp', host = 'localhost', user = 'ashutosh', password = '123')
 cursor = postgres.cursor()
 
-a = ["abs", "xyz", "vrt", "alpha", "beta"]
+a = ["abs", "xyz", "vrt", "alpha", "beta","gamma"]
 b = {"abs":"as01hu@gmail.com","xyz":"xyz@outlook.com","vrt": "alpha@yahoomail.com", "alpha":"xwe@yahoo.in", "beta":"ade@gmail.com"}
 
 for i in range(5):
