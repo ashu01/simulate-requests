@@ -30,3 +30,6 @@ Other python Modules used
 Contributors
 ============
 1. Ashutosh Kumar Gupta
+
+
+[Doc](https://ashu01.github.io/simulate-requests/)
