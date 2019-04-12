@@ -32,4 +32,4 @@ Contributors
 1. Ashutosh Kumar Gupta
 
 
-[Doc](https://ashu01.github.io/simulate-requests/)
+[Doc](https://ashutoshcp.github.io/simulate-requests/)
